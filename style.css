@@ -1,6 +1,8 @@
 body {
+    overflow: hidden; 
     background-color: rgb(251, 244, 232);
 }
+
 .title-container {
     display: flex;
     justify-content: center;
@@ -10,30 +12,39 @@ body {
     text-decoration: none;
     font-family: "Noto Sans", sans-serif;
     font-weight: bold;
-    font-size: 80px;
+    font-size: 80px;  
     color: rgb(119, 110, 101);
 }
 .srcc-container {
     display: flex;
     justify-content: center;
-    align-items: flex-end;
-    height: 85vh;
+    align-items: flex-end; 
+    height: 80vh;
 }
 
-.srcc-container a img {
+.srcc-container img {    
     width: 35px;
     height: 35px;
 }
-
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(20px, 1fr));
-  gap: 20px;
-  padding: 20px;
+.srcc-container a {
+    transition: transform .3s ease-in-out;
+}
+.srcc-container a:hover {
+    transform: scale(1.2);
 }
 
-.grid-item {
-  background: red;
-  padding: 25px;
-  border-radius: 8px;
+.game-container {
+    display: flex;
+    justify-content: center;
+    position: relative;
 }
+#canvas {
+    font-family: "Noto Sans", sans-serif;
+    font-weight: bold;
+    font-size: 80px;
+    
+    position: absolute;
+    top: -70vh;
+    /* background-color: rgb(189, 172, 151); */
+}
+

@@ -9,31 +9,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="style.css" rel="stylesheet"</link>	 
     <link href="styles/tumbler-style.css" rel="stylesheet"</link>
- </head>
+</head>
   <body>
-    <main>
+    
       <div class="title-container">
 	<a href="">2048</a>
       </div>
+      
       <div class="slider-container">
 	<input type="checkbox" id="switch"></input>
 	<label for="switch"></label>
       </div>
-      <!---
-      <div class="game-container">
-	<div class="grid-container">
-	  <div class="grid-item"></div>
-	  <div class="grid-item"></div>
-	  <div class="grid-item"></div>
-	 </div>
-      </div>
-      ---!>
+      
       <div class="srcc-container">
 	<a href="https://github.com/hellox86/2048play.github.io" target="_blank">
 	  <img src="./assets/github_icon.png"</img>
-        </a>
+	</a>
       </div>
-    </main>
+      <div class="game-container">
+	  <canvas id="canvas" width="420px" height="420px"></canvas>
+      </div>
+    <script type="module" src="scripts/game.js"></script>
     <script src="scripts/tumbler-logic.js"></script>
   </body>
 </html>
