@@ -1,4 +1,3 @@
-
 'use strict'
 
 import { GameField, mem } from "./game.js";
@@ -7,27 +6,29 @@ const field = new GameField(mem);
 
 field.draw();
 
+function spawn() {
+    setTimeout(() => {
+	field.generateNum();
+    }, 150);
+}
+
 document.addEventListener('keydown', (e) => {	
     if (!field.isGameOver()) {	
 	if (e.key == "ArrowLeft" || e.key == "a") {
 	    field.moveLeft();
-	    field.generateNum();
-	    field.print();
-	} else if (e.key == "ArrowRight" || e.key == "d") {
+	    spawn();
+	} else if ((e.key == "ArrowRight" || e.key == "d")) {
 	    field.moveRight();
-	    field.generateNum();
-	    field.print(); 
 	} else if (e.key == "ArrowUp" || e.key == "w") {
 	    field.moveUp();
-	    field.generateNum();
-	    field.print();
+	    spawn();
 	} else if (e.key == "ArrowDown" || e.key == "s") {
 	    field.moveDown();
-	    field.generateNum();
-	    field.print();
+	    spawn();
 	}
+	field.update();
     } else {
-	console.log("Game Over!");
+	alert("Game Over!");
 	field.draw();
     }
 })
