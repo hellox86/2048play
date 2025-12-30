@@ -1,5 +1,6 @@
 import * as matrix from "./rotationMatrixModule.js";
-// TODO: BUG, animation, localstorage: canvas, score
+// TODO: particles, animation
+
 const fw = 400;
 const fh = 400;
 const gridCellSize = 100;
@@ -7,7 +8,7 @@ const offset = 10;
 const canvas = document.getElementById("canvas");
 const textSize = "40px";
 const font = "sans-serif";
-// const ratio = window.devicePixelRatio || 1; // retina display detection
+
 const ctx = canvas.getContext("2d");
 const tileColor = {
     "2": "rgb(238, 228, 218)",
@@ -44,6 +45,7 @@ function createCell(num, pos, textColor) {
 
 export class GameField {    
     #f;
+    #f2;    
     count;
     constructor (f) {
 	this.#f = f;
@@ -65,10 +67,18 @@ export class GameField {
 	    }
 	    let row;
 	    let col;
+	    let i = 0;
+	    
 	    do {
 		row = randomInRange(0, 3);
 		col = randomInRange(0, 3);
-	    } while(this.#f[row][col] != 0);
+		i++;
+	    } while(this.#f[row][col] != 0 && i < 35);
+
+	    if(i == 35) {
+		console.log("FUCK YOU");
+		return;
+	    }
 	    this.#f[row][col] = output;
 	    const currentColor = (output > 2) ? tileColor["4"] : tileColor["2"];
 	    const textColor = "rgb(117, 100, 82)"; 
@@ -110,7 +120,10 @@ export class GameField {
     }
     getF() {
 	return this.#f; 
-    }    
+    }
+    setF(obj) {
+	this.#f = obj;
+    }
     update() {
 	this.draw();
 	for (let i = 0; i < 4; ++i) {
@@ -128,7 +141,7 @@ export class GameField {
 	    }
 	} 
     }
-    moveLeft() {
+    moveLeft(f=true){
 	let arr = matrix.createField();
 	let el_counter = 0;	    
 	for (let i = 0; i < 4; ++i) {
@@ -155,11 +168,16 @@ export class GameField {
 	    }
 	    el_counter = 0;
 	}
-	this.#f = res.slice();
+	if (f) {
+	    this.#f = res.slice();	
+	} else {
+	    this.#f2 = res.slice();
+	}
     }
     cmp(prev, now) {
 	return matrix.compareTwoMatrix(prev, now);
-    }
+    }    
+    
     moveRight() {
 	const prev = this.#f;
 	this.#f = matrix.rotate_180(this.#f);
@@ -185,27 +203,40 @@ export class GameField {
 	this.#f = matrix.rotate_90cw(this.#f);
 	const now = this.#f;
 	return this.cmp(prev, now);
-	
     }
-    
-    isGameOver() {
-	let flag = false;
-	let c = 0;
+    isFull() {
 	for (let i = 0; i < 4; ++i) {
 	    for (let j = 0; j < 4; ++j) {
 		if(this.#f[i][j] == 0) {
-		    ++c;
+		    return false;
 		}
 	    }
 	}
-	if (c == 0) {
-	    flag = true;
+	return true;
+    }
+    isGameOver() {
+	const isMergeable = () => {
+	    this.moveLeft(false);	
+	    for (let i = 0; i < 4; ++i) {
+		for (let j = 0; j < 4; ++j) {
+		    if((j < 3 && this.#f2[i][j] == this.#f2[i][j+1]) ||
+		       (j > 0 && this.#f2[i][j] == this.#f2[i][j-1]) ||
+		       (i < 3 && this.#f2[i][j] == this.#f2[i+1][j] ||
+		       (i > 0 && this.#f2[i][j] == this.#f2[i-1][j])
+		       )
+		      )
+		      return false;
+		}		
+	    }
+	    return true;
 	}
-	return flag;
+	if (this.isFull() && isMergeable()) {
+	    return true;
+	}
+	return false;
     }
     print() {
 	let res = "";
-	let c = 0;
 	for (let i = 0; i < 4; ++i) {
 	    for (let j = 0; j < 4; ++j) {
 		res += " " + this.#f[i][j];
@@ -214,7 +245,6 @@ export class GameField {
 	    console.log();
 	    res = "";
 	}
-	console.log(this.#f);
 	console.log();
     }
 }
