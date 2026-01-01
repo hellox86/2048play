@@ -1,5 +1,4 @@
 import * as matrix from "./rotationMatrixModule.js";
-// TODO: animation
 
 const fw = 400;
 const fh = 400;
@@ -8,8 +7,8 @@ const offset = 10;
 const canvas = document.getElementById("canvas");
 const textSize = "40px";
 const font = "sans-serif";
-
 const ctx = canvas.getContext("2d");
+
 const tileColor = {
     "2": "rgb(238, 228, 218)",
     "4": "rgb(236, 224, 200)",
@@ -75,8 +74,7 @@ export class GameField {
 		i++;
 	    } while(this.#f[row][col] != 0 && i < 35);
 
-	    if(i == 35) {
-		console.log("FUCK YOU");
+	    if(i == 35) {	
 		return;
 	    }
 	    this.#f[row][col] = output;

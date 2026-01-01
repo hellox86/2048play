@@ -9,6 +9,8 @@ const score = localStorage.getItem("score");
 const restart = document.getElementById("restart");
 const count = document.getElementById("count");
 
+// TODO: touchpad handling in my game, animation
+
 function spawn(c=1) {
     setTimeout(() => {
 	field.generateNum(c);
@@ -29,14 +31,14 @@ restart.addEventListener("click", () => {
     count.innerText = `Score: ${field.count}`;
 })
 
-document.addEventListener("keydown", (e) => {	    
+function game(e) {     
     if (e.key == "ArrowLeft" || e.key == "a") {
 	const prev = field.getF();
 	field.moveLeft();
 	const now = field.getF();
 	if(!field.cmp(prev, now)) {
 	    spawn();
-	}
+	}	
     } else if ((e.key == "ArrowRight" || e.key == "d")) {
 	if(!field.moveRight()) {
 	    spawn();
@@ -51,8 +53,7 @@ document.addEventListener("keydown", (e) => {
 	}
     }
     localStorage.setItem("field", JSON.stringify(field.getF()));
-    localStorage.setItem("score", field.count);
-    
+    localStorage.setItem("score", field.count);    
     if (field.isGameOver()) {
 	alert("Game Over!");
 	field.reset();	
@@ -61,7 +62,65 @@ document.addEventListener("keydown", (e) => {
     } else {
 	count.innerText = `Score: ${field.count}`;
 	field.update();	
+    }   
+}
+
+let startX, startY = 0;
+let endX, endY = 0;
+
+document.addEventListener("touchstart", (e) => {
+    startX = e.changedTouches[0].clientX;
+    startY = e.changedTouches[0].clientY;
+})
+document.addEventListener("touchend", (e) => {
+    endX = e.changedTouches[0].clientX;
+    endY = e.changedTouches[0].clientY;
+    console.log([startX, startY], [endX, endY]);
+})
+
+function gameMobile(e) {
+    let direction = "";
+    
+    const deviationX = Math.abs(startX)-Math.abs(endX);
+    const deviationY = Math.abs(startY)-Math.abs(endY);
+    
+    if(deviationX > 0) {
+	const prev = field.getF();
+	field.moveLeft();
+	const now = field.getF();
+	if(!field.cmp(prev, now)) {
+	    spawn();
+	}	
+    } else if(deviationX < 0) {
+	if(!field.moveRight()) {
+	    spawn();
+	}	
+    } else if(deviationY > 0) {
+	if(!field.moveUp()) {
+	    spawn();
+	}	
+    } else if(deviationY < 0) {
+	if(!field.moveDown()) {
+	    spawn();
+	}	
     }
+    localStorage.setItem("field", JSON.stringify(field.getF()));
+    localStorage.setItem("score", field.count);    
+    if (field.isGameOver()) {
+	alert("Game Over!");
+	field.reset();	
+	localStorage.setItem("field", JSON.stringify(field.getF()));
+	count.innerText = `Score: ${field.count}`;
+    } else {
+	count.innerText = `Score: ${field.count}`;
+	field.update();	
+    }    
+}
+document.addEventListener("keydown", (e) => {
+    game(e);
+})
+document.addEventListener("touchmove", () => {
+    gameMobile();
 })
 
 
