@@ -1,5 +1,5 @@
 import * as matrix from "./rotationMatrixModule.js";
-// TODO: particles, animation
+// TODO: animation
 
 const fw = 400;
 const fh = 400;
@@ -113,10 +113,8 @@ export class GameField {
 	    for (let j = 0; j < 4; ++j) {
 		this.#f[i][j] = 0;
 	    }
-	}
-	setTimeout(() => {
-	    this.generateNum(2);
-	}, 150);
+	}	
+	this.generateNum(2);
     }
     getF() {
 	return this.#f; 

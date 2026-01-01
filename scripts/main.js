@@ -22,10 +22,10 @@ if (score != null) {
     field.count = parseInt(score);
     count.innerText = `Score: ${field.count}`;
 }
-
 field.update();
 restart.addEventListener("click", () => {
     field.reset();
+    localStorage.setItem("field", JSON.stringify(field.getF()));
     count.innerText = `Score: ${field.count}`;
 })
 
@@ -55,7 +55,8 @@ document.addEventListener("keydown", (e) => {
     
     if (field.isGameOver()) {
 	alert("Game Over!");
-	field.reset();
+	field.reset();	
+	localStorage.setItem("field", JSON.stringify(field.getF()));
 	count.innerText = `Score: ${field.count}`;
     } else {
 	count.innerText = `Score: ${field.count}`;

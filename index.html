@@ -9,7 +9,6 @@
     <link rel="icon" href="./assets/favicon.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
-    <link href="styles/tumbler-style.css" rel="stylesheet">
   </head>
   <body>
     <div class="title-container">
@@ -18,26 +17,19 @@
     <div class="restart-container">
       <button id="restart">New Game</button>
     </div>
-    <div class="slider-container">
-      <input type="checkbox" id="switch"></input>
-      <label id="switch-lbl" for="switch"></label>
-    </div>
     
     <div class="srcc-container">
       <a href="https://github.com/hellox86/2048play.github.io" target="_blank">
-	<img src="./assets/github_icon.png"</img>
-	     </a>
+	<img src="assets/github_icon.png"</img>
+      </a>
     </div>
     <div class="score-container">
       <label id="count">Score: 0</label>
     </div>
-    
     <div class="game-container">
       <canvas width=420px height=420px id="canvas"></canvas>
-      </div>
-      
+    </div>
     <script type="module" src="scripts/game.js"></script>
     <script type="module" src="scripts/main.js"></script>
-    <script src="scripts/particle.js"></script>
   </body>
 </html>
