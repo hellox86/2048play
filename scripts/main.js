@@ -9,6 +9,7 @@ const score = localStorage.getItem("score");
 const restart = document.getElementById("restart");
 const count = document.getElementById("count");
 const howto = document.getElementById("howto");
+const canvas = document.getElementById("canvas");
 
 function spawn(c = 1) {
   setTimeout(() => {
@@ -32,7 +33,7 @@ restart.addEventListener("click", () => {
   count.innerText = `Очки: ${field.count}`;
 });
 howto.addEventListener("click", () => {
- window.location.href = `/2048play/howto`;
+  window.location.href = `/2048play/howto`;
 });
 function game(e) {
   if (e.key == "ArrowLeft" || e.key == "a") {
@@ -69,7 +70,9 @@ let startX,
 let endX,
   endY = 0;
 
-document.addEventListener("touchstart", (e) => {
+canvas.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+
   startX = e.changedTouches[0].clientX;
   startY = e.changedTouches[0].clientY;
 });
@@ -119,7 +122,8 @@ document.addEventListener("keydown", (e) => {
   game(e);
 });
 
-document.addEventListener("touchend", (e) => {
+canvas.addEventListener("touchend", (e) => {
+  e.preventDefault();
   endX = e.changedTouches[0].clientX;
   endY = e.changedTouches[0].clientY;
   gameMobile();
