@@ -32,7 +32,7 @@ restart.addEventListener("click", () => {
   count.innerText = `Очки: ${field.count}`;
 });
 howto.addEventListener("click", () => {
-  window.location.href = `/howto`;
+  window.location.href = `/2048play/howto`;
 });
 function game(e) {
   if (e.key == "ArrowLeft" || e.key == "a") {
