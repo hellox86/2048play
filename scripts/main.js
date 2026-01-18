@@ -33,7 +33,7 @@ restart.addEventListener("click", () => {
   count.innerText = `Очки: ${field.count}`;
 });
 howto.addEventListener("click", () => {
-  window.location.href = `/2048play/howto`;
+  window.location.href = `/howto`;
 });
 function game(e) {
   localStorage.setItem("field", JSON.stringify(field.getF()));
