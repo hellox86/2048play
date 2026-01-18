@@ -27,6 +27,8 @@ body {
 	font-size: 1rem;
     }
 }
+
+
 @media screen and (min-width: 992px) {
     .rules {
 	width: 100%;
@@ -35,4 +37,17 @@ body {
     #back {
 	font-size: 1rem;
     }
+
 }
+
+@media screen and (orientation: landscape) {
+    .rules {
+	width: 100%;
+	height: 90%;
+    }
+    #back {
+	font-size: 1rem;
+    }
+
+}
+
