@@ -36,11 +36,26 @@ const tileColor = {
   2048: "rgb(238, 194, 46)",
   default: "rgb(61, 58, 51)",
 };
+// fadein for tiles in field
+let alpha = 0;
 
 function fillCell(x, y, color, w = gridCellSize, h = gridCellSize) {
   ctx.fillStyle = color;
   ctx.fillRect(0.5 + x + offset, offset + y, w, h);
 }
+
+function fadeIn(x, y, color, w, h) {
+  ctx.clearRect(x, y, w, h);
+  ctx.globalAlpha = alpha;
+  fillCell(x, y, color, w, h);
+  if (alpha < 1) {
+    alpha += 0.02;
+    requestAnimationFrame(fadeIn);
+  } else {
+    alpha = 1;
+  }
+}
+
 function createCell(num, pos, textColor) {
   const i = pos[0];
   const j = pos[1];
@@ -114,13 +129,14 @@ export class GameField {
 
         const currentColor = output > 2 ? tileColor["4"] : tileColor["2"];
         const textColor = "rgb(117, 100, 82)";
-        fillCell(
+        fadeIn(
           gridCellSize * col + 5,
           gridCellSize * row + 5,
           currentColor,
           fillAreaSize,
           fillAreaSize,
         );
+        alpha = 0;
         ctx.font = `${textSize} ${font}`;
         createCell(this.#f[row][col], [row, col], textColor);
       }
