@@ -7,6 +7,11 @@ const offset = 10;
 const canvas = document.getElementById("canvas");
 const textSize = "40px";
 const font = "sans-serif";
+const ratio = window.devicePixelRatio;
+
+canvas.width = canvas.clientWidth * ratio;
+canvas.height = canvas.clientHeight * ratio;
+
 const ctx = canvas.getContext("2d");
 
 const tileColor = {
@@ -58,6 +63,19 @@ export class GameField {
     this.#f = f;
     this.count = 0;
   }
+  #getFreeCells() {
+    let res = [];
+    let el_count = 0;
+
+    for (let i = 0; i < 4; ++i) {
+      for (let j = 0; j < 4; ++j) {
+        if (this.#f[i][j] == 0) {
+          res[el_count++] = { row: i, col: j };
+        }
+      }
+    }
+    return res;
+  }
   generateNum(times = 1) {
     let output;
     const randomInRange = (min, max) => {
@@ -67,32 +85,31 @@ export class GameField {
         Math.random() * (maxFloored - minCeiled + 1) + minCeiled,
       );
     };
+
     for (let i = 0; i < times; ++i) {
       output = 2;
       const randIndex = randomInRange(0, 9);
-
       if (randIndex == 9) {
         output = 4;
       }
-      let row;
-      let col;
+
       let i = 0;
+      let freeCells = this.#getFreeCells();
+      let coord = {};
+      let row,
+        col = -1;
+      coord = freeCells[randomInRange(0, freeCells.length - 1)];
+      if (Object.keys(coord).length != 0) {
+        row = coord["row"];
+        col = coord["col"];
+        this.#f[row][col] = output;
 
-      do {
-        row = randomInRange(0, 3);
-        col = randomInRange(0, 3);
-        i++;
-      } while (this.#f[row][col] != 0 && i < 35);
-
-      if (i == 35) {
-        return;
+        const currentColor = output > 2 ? tileColor["4"] : tileColor["2"];
+        const textColor = "rgb(117, 100, 82)";
+        fillCell(100 * col + 5, 100 * row + 5, currentColor, 91, 91);
+        ctx.font = `${textSize} ${font}`;
+        createCell(this.#f[row][col], [row, col], textColor);
       }
-      this.#f[row][col] = output;
-      const currentColor = output > 2 ? tileColor["4"] : tileColor["2"];
-      const textColor = "rgb(117, 100, 82)";
-      fillCell(100 * col + 5, 100 * row + 5, currentColor, 91, 91);
-      ctx.font = `${textSize} ${font}`;
-      createCell(this.#f[row][col], [row, col], textColor);
     }
   }
   draw() {
@@ -109,7 +126,7 @@ export class GameField {
         fillCell(x, y, "rgb(184, 169, 156)");
       }
     }
-    ctx.lineWidth = 5;
+    ctx.lineWidth = 9;
     ctx.strokeStyle = "rgb(156, 138, 124)";
     ctx.stroke();
   }
