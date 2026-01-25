@@ -3,17 +3,20 @@ import * as matrix from "./rotationMatrixModule.js";
 const fw = 400;
 const fh = 400;
 const gridCellSize = 100;
-const offset = 10;
+const offset = 0;
 const canvas = document.getElementById("canvas");
 const textSize = "40px";
 const font = "sans-serif";
-const ratio = window.devicePixelRatio;
+const ratio = window.devicePixelRatio || 1;
 
-canvas.width = canvas.clientWidth * ratio;
-canvas.height = canvas.clientHeight * ratio;
+canvas.width = fw * ratio;
+canvas.height = fh * ratio;
+canvas.style.width = fw + "px";
+canvas.style.height = fh + "px";
+const fillAreaSize = 91;
 
 const ctx = canvas.getContext("2d");
-
+ctx.scale(ratio, ratio);
 const tileColor = {
   2: "rgb(238, 228, 218)",
   4: "rgb(236, 224, 200)",
@@ -106,7 +109,13 @@ export class GameField {
 
         const currentColor = output > 2 ? tileColor["4"] : tileColor["2"];
         const textColor = "rgb(117, 100, 82)";
-        fillCell(100 * col + 5, 100 * row + 5, currentColor, 91, 91);
+        fillCell(
+          100 * col + 5,
+          100 * row + 5,
+          currentColor,
+          fillAreaSize,
+          fillAreaSize,
+        );
         ctx.font = `${textSize} ${font}`;
         createCell(this.#f[row][col], [row, col], textColor);
       }
@@ -152,14 +161,20 @@ export class GameField {
       for (let j = 0; j < 4; ++j) {
         if (this.#f[i][j] != 0) {
           if (this.#f[i][j] > 2048) {
-            fillCell(100 * j + 5, 100 * i + 5, tileColor["default"], 90, 90);
+            fillCell(
+              100 * j + 5,
+              100 * i + 5,
+              tileColor["default"],
+              fillAreaSize,
+              fillAreaSize,
+            );
           } else {
             fillCell(
               100 * j + 5,
               100 * i + 5,
               tileColor[this.#f[i][j].toString()],
-              90,
-              90,
+              fillAreaSize,
+              fillAreaSize,
             );
           }
           ctx.font = `${textSize} ${font}`;
