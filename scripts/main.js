@@ -61,6 +61,7 @@ function game(e) {
   if (field.isGameOver()) {
     alert("Game Over!");
     field.reset();
+    count.innerText = `Очки: ${field.count}`;
   } else {
     count.innerText = `Очки: ${field.count}`;
     field.update();
@@ -117,6 +118,7 @@ function gameMobile(e) {
   if (field.isGameOver()) {
     alert("Game Over!");
     field.reset();
+    count.innerText = `Очки: ${field.count}`;
   } else {
     count.innerText = `Очки: ${field.count}`;
     field.update();
