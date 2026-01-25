@@ -7,7 +7,9 @@ const fh = canvas.height;
 
 const gridCellSize = fw / 4;
 const borderSize = 9;
-const textSize = "40px";
+
+const textSize = window.getComputedStyle(canvas).fontSize;
+
 const font = "sans-serif";
 const ratio = window.devicePixelRatio || 1;
 

@@ -4,4 +4,5 @@ function resize() {
   canvas.width = canvas.clientWidth;
   canvas.height = canvas.clientHeight;
 }
+
 resize();
