@@ -2,26 +2,31 @@ import * as matrix from "./rotationMatrixModule.js";
 
 const offset = 0;
 const canvas = document.getElementById("canvas");
-const fw = canvas.width;
-const fh = canvas.height;
+const anim = document.getElementById("animation");
 
+const fw = canvas2.width;
+const fh = canvas2.height;
 const gridCellSize = fw / 4;
 const borderSize = 9;
-
 const textSize = window.getComputedStyle(canvas).fontSize;
-
 const font = "sans-serif";
 const ratio = window.devicePixelRatio || 1;
 
-canvas.width = fw * ratio;
-canvas.height = fh * ratio;
+anim.width = canvas.width = fw * ratio;
+anim.height = canvas.height = fh * ratio;
+
 canvas.style.width = fw + "px";
 canvas.style.height = fh + "px";
+
+// canvas.style.border = "5px solid rgb(156, 138, 124)";
 
 const fillAreaSize = gridCellSize - borderSize;
 
 const ctx = canvas.getContext("2d");
+const ctx2 = anim.getContext("2d");
+
 ctx.scale(ratio, ratio);
+
 const tileColor = {
   2: "rgb(238, 228, 218)",
   4: "rgb(236, 224, 200)",
@@ -36,23 +41,50 @@ const tileColor = {
   2048: "rgb(238, 194, 46)",
   default: "rgb(61, 58, 51)",
 };
-// fadein for tiles in field
+
 let alpha = 0;
 
-function fillCell(x, y, color, w = gridCellSize, h = gridCellSize) {
-  ctx.fillStyle = color;
-  ctx.fillRect(0.5 + x + offset, offset + y, w, h);
+function fillCell(x, y, color, w = gridCellSize, h = gridCellSize, c = ctx) {
+  c.fillStyle = color;
+  c.fillRect(0.5 + x + offset, offset + y, w, h);
+}
+class rect {
+  x;
+  y;
+  color;
+  w;
+  h;
+  constructor(x, y, color, w, h) {
+    this.x = x;
+    this.y = y;
+    this.color = color;
+    this.w = w;
+    this.h = h;
+  }
+  draw() {
+    fillCell(this.x, this.y, this.color, this.w, this.h);
+  }
 }
 
-function fadeIn(x, y, color, w, h) {
-  ctx.clearRect(x, y, w, h);
+let buf = [];
+
+function fadeIn() {
+  buf.forEach((el) => {
+    ctx.clearRect(el.x, el.y, el.w, el.h);
+  });
+
   ctx.globalAlpha = alpha;
-  fillCell(x, y, color, w, h);
+
+  buf.forEach((el) => {
+    el.draw();
+  });
+
   if (alpha < 1) {
-    alpha += 0.02;
-    requestAnimationFrame(fadeIn);
+    alpha += 0.01;
+    setTimeout(fadeIn);
   } else {
-    alpha = 1;
+    ctx.globalAlpha = 1;
+    alpha = 0;
   }
 }
 
@@ -60,18 +92,18 @@ function createCell(num, pos, textColor) {
   const i = pos[0];
   const j = pos[1];
 
-  ctx.fillStyle = textColor;
-  ctx.strokeStyle = textColor;
-  ctx.lineWidth = 3;
+  ctx2.fillStyle = textColor;
+  ctx2.strokeStyle = textColor;
+  ctx2.lineWidth = 3;
   const res = num.toString();
-  ctx.textBaseline = "middle";
-  ctx.textAlign = "center";
-  ctx.strokeText(
+  ctx2.textBaseline = "middle";
+  ctx2.textAlign = "center";
+  ctx2.strokeText(
     res,
     offset + gridCellSize * j + gridCellSize / 2,
     offset + gridCellSize * i + gridCellSize / 2,
   );
-  ctx.fillText(
+  ctx2.fillText(
     res,
     offset + gridCellSize * j + gridCellSize / 2,
     offset + gridCellSize * i + gridCellSize / 2,
@@ -129,15 +161,16 @@ export class GameField {
 
         const currentColor = output > 2 ? tileColor["4"] : tileColor["2"];
         const textColor = "rgb(117, 100, 82)";
-        fadeIn(
+        fillCell(
           gridCellSize * col + 5,
           gridCellSize * row + 5,
           currentColor,
           fillAreaSize,
           fillAreaSize,
+          ctx2,
         );
-        alpha = 0;
-        ctx.font = `${textSize} ${font}`;
+
+        ctx2.font = `${textSize} ${font}`;
         createCell(this.#f[row][col], [row, col], textColor);
       }
     }
@@ -160,9 +193,11 @@ export class GameField {
     ctx.strokeStyle = "rgb(156, 138, 124)";
     ctx.stroke();
   }
+
   reset() {
     this.count = 0;
-    this.draw();
+
+    ctx2.clearRect(0, 0, anim.width, anim.height);
     for (let i = 0; i < 4; ++i) {
       for (let j = 0; j < 4; ++j) {
         this.#f[i][j] = 0;
@@ -177,7 +212,7 @@ export class GameField {
     this.#f = obj;
   }
   update() {
-    this.draw();
+    ctx2.clearRect(0, 0, anim.width, anim.height);
     for (let i = 0; i < 4; ++i) {
       for (let j = 0; j < 4; ++j) {
         if (this.#f[i][j] != 0) {
@@ -188,6 +223,7 @@ export class GameField {
               tileColor["default"],
               fillAreaSize,
               fillAreaSize,
+              ctx2,
             );
           } else {
             fillCell(
@@ -196,9 +232,10 @@ export class GameField {
               tileColor[this.#f[i][j].toString()],
               fillAreaSize,
               fillAreaSize,
+              ctx2,
             );
           }
-          ctx.font = `${textSize} ${font}`;
+          ctx2.font = `${textSize} ${font}`;
           const textColor =
             this.#f[i][j] <= 4 ? "rgb(117, 100, 82)" : "rgb(255, 255, 255)";
           createCell(this.#f[i][j], [i, j], textColor);
