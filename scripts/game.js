@@ -7,6 +7,7 @@ const anim = document.getElementById("animation");
 const fw = canvas.width;
 const fh = canvas.height;
 const gridCellSize = fw / 4;
+console.log(gridCellSize, anim.width / 4);
 const borderSize = 9;
 const textSize = window.getComputedStyle(canvas).fontSize;
 const font = "sans-serif";
@@ -16,7 +17,7 @@ canvas.width = fw * ratio;
 canvas.height = fh * ratio;
 canvas.style.width = fw + "px";
 canvas.style.height = fh + "px";
-
+console.log(ratio);
 const fillAreaSize = gridCellSize - borderSize;
 const ctx = canvas.getContext("2d");
 const ctx2 = anim.getContext("2d");
