@@ -60,6 +60,8 @@ body {
     width: 400px;
     height: 400px;
     z-index: 2;
+    vertical-align: bottom;
+
 }
 
 .restart-container { 
