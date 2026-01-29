@@ -17,12 +17,18 @@ canvas.width = fw * ratio;
 canvas.height = fh * ratio;
 canvas.style.width = fw + "px";
 canvas.style.height = fh + "px";
+canvas2.width = fw * ratio;
+canvas2.height = fh * ratio;
+canvas2.style.width = fw + "px";
+canvas2.style.height = fh + "px";
+
 console.log(ratio);
 const fillAreaSize = gridCellSize - borderSize;
 const ctx = canvas.getContext("2d");
 const ctx2 = anim.getContext("2d");
 
 ctx.scale(ratio, ratio);
+ctx2.scale(ratio, ratio);
 
 const tileColor = {
   2: "rgb(238, 228, 218)",
