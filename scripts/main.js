@@ -9,7 +9,8 @@ const score = localStorage.getItem("score");
 const restart = document.getElementById("restart");
 const count = document.getElementById("count");
 const howto = document.getElementById("howto");
-const canvas = document.getElementById("canvas");
+const canvas = document.getElementById("animation");
+
 field.draw();
 function spawn(c = 1) {
   setTimeout(() => {

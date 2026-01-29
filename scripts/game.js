@@ -4,24 +4,21 @@ const offset = 0;
 const canvas = document.getElementById("canvas");
 const anim = document.getElementById("animation");
 
-const fw = canvas2.width;
-const fh = canvas2.height;
+const fw = canvas.width;
+const fh = canvas.height;
 const gridCellSize = fw / 4;
 const borderSize = 9;
 const textSize = window.getComputedStyle(canvas).fontSize;
 const font = "sans-serif";
 const ratio = window.devicePixelRatio || 1;
 
-anim.width = canvas.width = fw * ratio;
-anim.height = canvas.height = fh * ratio;
+canvas.width = fw * ratio;
+canvas.height = fh * ratio;
 
 canvas.style.width = fw + "px";
 canvas.style.height = fh + "px";
 
-// canvas.style.border = "5px solid rgb(156, 138, 124)";
-
 const fillAreaSize = gridCellSize - borderSize;
-
 const ctx = canvas.getContext("2d");
 const ctx2 = anim.getContext("2d");
 
