@@ -14,7 +14,6 @@ const ratio = window.devicePixelRatio || 1;
 
 canvas.width = fw * ratio;
 canvas.height = fh * ratio;
-
 canvas.style.width = fw + "px";
 canvas.style.height = fh + "px";
 
