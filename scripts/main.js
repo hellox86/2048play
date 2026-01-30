@@ -13,9 +13,7 @@ const canvas = document.getElementById("animation");
 
 field.draw();
 function spawn(c = 1) {
-  setTimeout(() => {
-    field.generateNum(c);
-  }, 150);
+  field.generateNum(c);
 }
 
 if (f != null) {
