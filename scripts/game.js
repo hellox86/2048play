@@ -14,6 +14,7 @@ const font = "sans-serif";
 const ratio = window.devicePixelRatio || 1;
 
 canvas.width = fw * ratio;
+
 canvas.height = fh * ratio;
 canvas.style.width = fw + "px";
 canvas.style.height = fh + "px";
@@ -277,6 +278,7 @@ export class GameField {
   }
   moveLeft(f = true) {
     let arr = matrix.createField();
+    const prev = this.#f;
     let el_counter = 0;
     for (let i = 0; i < 4; ++i) {
       for (let j = 0; j < 4; ++j) {
@@ -307,36 +309,31 @@ export class GameField {
     } else {
       this.#f2 = res.slice();
     }
+    return this.cmp(prev, this.#f);
   }
   cmp(prev, now) {
     return matrix.compareTwoMatrix(prev, now);
   }
 
   moveRight() {
-    const prev = this.#f;
     this.#f = matrix.rotate_180(this.#f);
-    this.moveLeft();
+    let fl = this.moveLeft();
     this.#f = matrix.rotate_180(this.#f);
-    const now = this.#f;
-    return this.cmp(prev, now);
+    return fl;
   }
 
   moveDown() {
-    const prev = this.#f;
     this.#f = matrix.rotate_90cw(this.#f);
-    this.moveLeft();
+    let fl = this.moveLeft();
     this.#f = matrix.rotate_90ccw(this.#f);
-    const now = this.#f;
-    return this.cmp(prev, now);
+    return fl;
   }
 
   moveUp() {
-    const prev = this.#f;
     this.#f = matrix.rotate_90ccw(this.#f);
-    this.moveLeft();
+    let fl = this.moveLeft();
     this.#f = matrix.rotate_90cw(this.#f);
-    const now = this.#f;
-    return this.cmp(prev, now);
+    return fl;
   }
   isFull() {
     for (let i = 0; i < 4; ++i) {
@@ -353,13 +350,14 @@ export class GameField {
       this.moveLeft(false);
       for (let i = 0; i < 4; ++i) {
         for (let j = 0; j < 4; ++j) {
-          if (
-            (j < 3 && this.#f2[i][j] == this.#f2[i][j + 1]) ||
-            (j > 0 && this.#f2[i][j] == this.#f2[i][j - 1]) ||
-            (i < 3 && this.#f2[i][j] == this.#f2[i + 1][j]) ||
-            (i > 0 && this.#f2[i][j] == this.#f2[i - 1][j])
-          )
-            return false;
+          if (j + 1 < 4 && i + 1 < 4) {
+            if (
+              this.#f2[i][j] == this.#f2[i][j + 1] ||
+              this.#f2[i][j] == this.#f2[i + 1][j]
+            ) {
+              return false;
+            }
+          }
         }
       }
       return true;

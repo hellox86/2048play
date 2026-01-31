@@ -62,10 +62,7 @@ function game(e) {
   localStorage.setItem("field", JSON.stringify(field.getF()));
   localStorage.setItem("score", field.count);
   if (e.key == "ArrowLeft" || e.key == "a") {
-    const prev = field.getF();
-    field.moveLeft();
-    const now = field.getF();
-    if (!field.cmp(prev, now)) {
+    if (!field.moveLeft()) {
       spawn();
     }
   } else if (e.key == "ArrowRight" || e.key == "d") {
