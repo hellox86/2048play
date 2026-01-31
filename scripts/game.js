@@ -123,8 +123,6 @@ class rect {
   }
   draw() {
     fillCell(this.x, this.y, this.color, this.w, this.h, ctx2);
-
-    // createCell(this.#f[row][col], [row, col], textColor);
   }
   end() {
     createCell(this.text, this.pos, this.textColor);
@@ -153,7 +151,6 @@ export class GameField {
     return res;
   }
   generateNum(times = 1) {
-    // debugger;
     let output;
     let buf = [];
     const randomInRange = (min, max) => {
@@ -184,21 +181,31 @@ export class GameField {
 
         const currentColor = output > 2 ? tileColor["4"] : tileColor["2"];
         const textColor = "rgb(117, 100, 82)";
-        buf.push(
-          new rect(
-            gridCellSize * col + 5,
-            gridCellSize * row + 5,
-            currentColor,
-            fillAreaSize,
-            fillAreaSize,
-            output,
-            [row, col],
-            textColor,
-          ),
+        //     buf.push(
+        //       new rect(
+        //         gridCellSize * col + 5,
+        //         gridCellSize * row + 5,
+        //         currentColor,
+        //         fillAreaSize,
+        //         fillAreaSize,
+        //         output,
+        //         [row, col],
+        //         textColor,
+        //       ),
+        //     );
+        fillCell(
+          gridCellSize * col + 5,
+          gridCellSize * row + 5,
+          currentColor,
+          fillAreaSize,
+          fillAreaSize,
+          ctx2,
         );
+        createCell(this.#f[row][col], [row, col], textColor);
       }
     }
-    total(buf);
+
+    // total(buf);
   }
 
   draw() {
@@ -238,7 +245,7 @@ export class GameField {
     this.#f = obj;
   }
   update() {
-    // ctx2.clearRect(0, 0, anim.width, anim.height);
+    ctx2.clearRect(0, 0, anim.width, anim.height);
     for (let i = 0; i < 4; ++i) {
       for (let j = 0; j < 4; ++j) {
         if (this.#f[i][j] != 0) {

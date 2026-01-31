@@ -1,5 +1,3 @@
-"use strict";
-
 import { GameField, mem } from "./game.js";
 
 const field = new GameField(mem);
@@ -12,8 +10,40 @@ const howto = document.getElementById("howto");
 const canvas = document.getElementById("animation");
 
 field.draw();
+function listeners() {
+  restart.addEventListener("click", () => {
+    field.reset();
+    localStorage.setItem("field", JSON.stringify(field.getF()));
+    count.innerText = `Очки: ${field.count}`;
+  });
+  howto.addEventListener("click", () => {
+    window.location.href = `/2048play/howto`;
+  });
+  canvas.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+
+    startX = e.changedTouches[0].clientX;
+    startY = e.changedTouches[0].clientY;
+  });
+  canvas.addEventListener("touchend", (e) => {
+    e.preventDefault();
+    endX = e.changedTouches[0].clientX;
+    endY = e.changedTouches[0].clientY;
+    gameMobile();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    game(e);
+  });
+  window.addEventListener("beforeunload", () => {
+    localStorage.setItem("field", JSON.stringify(field.getF()));
+    localStorage.setItem("score", field.count);
+  });
+}
 function spawn(c = 1) {
-  field.generateNum(c);
+  setTimeout(() => {
+    field.generateNum(c);
+  }, 150);
 }
 
 if (f != null) {
@@ -25,15 +55,9 @@ if (score != null) {
   field.count = parseInt(score);
   count.innerText = `Очки: ${field.count}`;
 }
+listeners();
 field.update();
-restart.addEventListener("click", () => {
-  field.reset();
-  localStorage.setItem("field", JSON.stringify(field.getF()));
-  count.innerText = `Очки: ${field.count}`;
-});
-howto.addEventListener("click", () => {
-  window.location.href = `/2048play/howto`;
-});
+
 function game(e) {
   localStorage.setItem("field", JSON.stringify(field.getF()));
   localStorage.setItem("score", field.count);
@@ -71,13 +95,6 @@ let startX,
   startY = 0;
 let endX,
   endY = 0;
-
-canvas.addEventListener("touchstart", (e) => {
-  e.preventDefault();
-
-  startX = e.changedTouches[0].clientX;
-  startY = e.changedTouches[0].clientY;
-});
 
 function gameMobile(e) {
   localStorage.setItem("field", JSON.stringify(field.getF()));
@@ -123,17 +140,3 @@ function gameMobile(e) {
     field.update();
   }
 }
-document.addEventListener("keydown", (e) => {
-  game(e);
-});
-
-canvas.addEventListener("touchend", (e) => {
-  e.preventDefault();
-  endX = e.changedTouches[0].clientX;
-  endY = e.changedTouches[0].clientY;
-  gameMobile();
-});
-window.addEventListener("beforeunload", () => {
-  localStorage.setItem("field", JSON.stringify(field.getF()));
-  localStorage.setItem("score", field.count);
-});
