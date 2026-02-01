@@ -9,31 +9,32 @@
     <link rel="icon" href="./assets/favicon.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="styles/style.css" rel="stylesheet">
-  </head>
+    <link
+ </head>
   <body>
-    <div class="title-container">
-      <a href="">2048</a>
-    </div>
-    <div class="restart-container">
-      <button id="restart">Новая игра</button>
-     <p id="howto">
-      Как играть?
-    </p>
-    
-    </div>
-
-    <div class="srcc-container">
-      <a href="https://github.com/hellox86/2048play.github.io" target="_blank">
-	<img src="assets/github_icon.png"</img>
-      </a>
-    </div>
-    <div class="score-container">
-      <label id="count">Очки: 0</label>
-    </div>
-    <div class="game-container">
-      <canvas width=400px height=400px id="canvas"></canvas>
-      <canvas width=400px height=400px id="animation"></canvas>
-    </div>
+    <main>
+      <div class="title-container">
+	<a href="">2048</a>
+	<div class="restart-container">
+	  <button id="restart">Новая игра</button>
+	  <p id="howto">
+	    Как играть?
+	  </p>
+	</div>
+      </div>
+      <div class="score-container">
+	<p>Очки: </p>
+	<p id="score">0</p>
+      </div>      
+      <div class="srcc-container">
+	<a href="https://github.com/hellox86/2048play.github.io" target="_blank">
+	  <img src="assets/github_icon.png"</img>
+	</a>
+      </div>
+      <div class="game-container">
+	<canvas width=400px height=400px id="canvas"></canvas>
+      </div>
+    </main>
     <script src="scripts/overrideCanvasSize.js"></script>
     <script type="module" src="scripts/game.js"></script>
     <script type="module" src="scripts/main.js"></script>
