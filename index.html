@@ -9,6 +9,7 @@
     <link rel="icon" href="./assets/favicon.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="styles/style.css" rel="stylesheet">
+    <link href="styles/theme-switcher.css" rel="stylesheet">
     <link
  </head>
   <body>
@@ -32,10 +33,35 @@
 	</a>
       </div>
       <div class="game-container">
-	<canvas width=400px height=400px id="canvas"></canvas>
-      </div>
+	<table id="table">
+	  <tbody>
+	    <tr>
+	      <th></th>
+	      <th></th>
+	      <th></th>
+	      <th></th>
+	    </tr>
+	    <tr>
+	      <th></th>
+	      <th></th>
+	      <th></th>
+	      <th></th>
+	    </tr>
+	    <tr>
+	      <th></th>
+	      <th></th>
+	      <th></th>
+	      <th></th>
+	    </tr>
+	    <tr>
+	      <th></th>
+	      <th></th>
+	      <th></th>
+	      <th></th>
+	    </tr>
+	  </tbody>
+	</table>
     </main>
-    <script src="scripts/overrideCanvasSize.js"></script>
     <script type="module" src="scripts/game.js"></script>
     <script type="module" src="scripts/main.js"></script>
   </body>

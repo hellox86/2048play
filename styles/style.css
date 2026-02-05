@@ -1,19 +1,22 @@
+:root {
+    --movementDistance: 270px;
+}
 body {
     overflow: hidden;
     font-family: "Noto Sans", sans-serif;
+    /* background-color: #2d2d2d;  */
 }
 
 .title-container a {
     position: relative;
-
     display: inline;
-    top: -10px;
-    
+    top: -10px;    
     text-decoration: none;
     font-size: 80px;
     font-weight: bold;
     color: #4495d4;
 }
+
 .restart-container {
     font-weight: 500;    
     float: right;
@@ -33,11 +36,13 @@ body {
     position: relative;
     width: 35px;
     height: 35px;
-    margin-top: 1rem;
+    top: 2rem;
 }
 .srcc-container img {    
     width: 35px;
     height: 35px;
+    background-color: #FFF;
+    border-radius: 9px;
 }
 
 .srcc-container img {
@@ -53,17 +58,48 @@ body {
     top: 55%;
     left: 50%;
     transform: translate(-50%, -50%);
-
+}
+#table {
+    border-spacing: 10px;
+    color: #FFF;
+}
+#table th {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    background-color: #eeeeee;
+}
+.fade-in {
+	opacity: 1;
+	animation-name: fadeInOpacity;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-in;
+	animation-duration: 0.2s;
 }
 
-#canvas {
-    position: absolute;   
-    width: 400px;
-    height: 400px;
-    font-size: 40px;
-    top: 55%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+@keyframes fadeInOpacity {
+    0% {
+	opacity: 0;
+    }
+    100% {
+	opacity: 1;
+    }
+}
+
+.movement {
+    animation-name: move;
+    animation-iteration-count: 1;
+    animation-timing-function: ease;
+    animation-duration: 0.2s;
+}
+@keyframes move {
+    /* 0% { */
+    /* 	transform: translateX(0); */
+    /* } */
+    
+    100% {
+	transform: translateX(var(--movementDistance));
+    }
 }
 #score {
     text-align: center;
@@ -89,11 +125,6 @@ body {
 	width: 300px;
 	height: 300px;
     }
-    #canvas {
-	width: 300px;
-	height: 300px;
-	font-size: 30px;
-    }
     #restart {
 	font-size: 14px;
 	padding: 3px 7px;
@@ -106,6 +137,13 @@ body {
     }
     .score-container {
 	font-size: 20px;
+    }
+    .srcc-container {
+	top: 0.5rem;
+	
+    }
+    #table {
+	border-spacing: 8px;
     }
     .srcc-container img {    
 	width: 25px;
