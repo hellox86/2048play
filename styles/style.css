@@ -47,6 +47,7 @@ body {
     border-radius: 5px;
     border: 5px solid rgb(156, 138, 124);
     font-size: 40px; 
+    vertical-align: bottom;
 }
 
 .over {

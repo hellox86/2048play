@@ -30,7 +30,6 @@ btnOver.addEventListener("click", () => {
   canvas.classList.remove("over");
   textOver.style.display = "none";
   btnOver.style.display = "none";
-
   field.reset();
   count.innerText = `Очки: ${field.count}`;
   saveState();
@@ -55,9 +54,12 @@ if (score != null) {
 field.update();
 
 restart.addEventListener("click", () => {
+  canvas.classList.remove("over");
+  textOver.style.display = "none";
+  btnOver.style.display = "none";
+
   field.reset();
-  localStorage.setItem("field", JSON.stringify(field.getF()));
-  count.innerText = `Очки: ${field.count}`;
+  saveState();
 });
 
 howto.addEventListener("click", () => {
