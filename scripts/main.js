@@ -59,6 +59,8 @@ restart.addEventListener("click", () => {
   btnOver.style.display = "none";
 
   field.reset();
+  count.innerText = `Очки: ${field.count}`;
+
   saveState();
 });
 
