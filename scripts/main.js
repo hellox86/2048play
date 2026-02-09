@@ -1,8 +1,6 @@
-"use strict";
+import { GameField } from "./game.js";
 
-import { GameField, mem } from "./game.js";
-
-const field = new GameField(mem);
+const field = new GameField();
 
 const f = localStorage.getItem("field");
 const score = localStorage.getItem("score");
@@ -10,7 +8,33 @@ const restart = document.getElementById("restart");
 const count = document.getElementById("count");
 const howto = document.getElementById("howto");
 const canvas = document.getElementById("canvas");
+const btnOver = document.getElementById("btn-over");
+const textOver = document.getElementById("text-over");
 
+function saveState() {
+  localStorage.setItem("field", JSON.stringify(field.getF()));
+  localStorage.setItem("score", field.count);
+}
+// game over checker
+const interval = setInterval(() => {
+  if (field.isGameOver()) {
+    saveState();
+    canvas.classList.remove("over");
+    canvas.classList.add("over");
+    textOver.style.display = "block";
+    btnOver.style.display = "block";
+  }
+}, 150);
+
+btnOver.addEventListener("click", () => {
+  canvas.classList.remove("over");
+  textOver.style.display = "none";
+  btnOver.style.display = "none";
+
+  field.reset();
+  count.innerText = `Очки: ${field.count}`;
+  saveState();
+});
 function spawn(c = 1) {
   setTimeout(() => {
     field.generateNum(c);
@@ -22,47 +46,45 @@ if (f != null) {
 } else {
   field.reset();
 }
+
 if (score != null) {
   field.count = parseInt(score);
   count.innerText = `Очки: ${field.count}`;
 }
+
 field.update();
+
 restart.addEventListener("click", () => {
   field.reset();
   localStorage.setItem("field", JSON.stringify(field.getF()));
   count.innerText = `Очки: ${field.count}`;
 });
+
 howto.addEventListener("click", () => {
-  window.location.href = `/2048play/howto`;
+  window.location.href = `${location}howto`;
 });
+
 function game(e) {
-  localStorage.setItem("field", JSON.stringify(field.getF()));
-  localStorage.setItem("score", field.count);
-  if (e.key == "ArrowLeft" || e.key == "a") {
-    const prev = field.getF();
-    field.moveLeft();
-    const now = field.getF();
-    if (!field.cmp(prev, now)) {
-      spawn();
+  const key = e.key;
+  if (key.match(/w|s|a|d|ц|ы|ф|в/i)) {
+    if (key == "ArrowLeft" || key == "a" || key == "ф") {
+      if (!field.moveLeft()) {
+        spawn();
+      }
+    } else if (key == "ArrowRight" || key == "d" || key == "в") {
+      if (!field.moveRight()) {
+        spawn();
+      }
+    } else if (key == "ArrowUp" || key == "w" || key == "ц") {
+      if (!field.moveUp()) {
+        spawn();
+      }
+    } else if (key == "ArrowDown" || key == "s" || key == "ы") {
+      if (!field.moveDown()) {
+        spawn();
+      }
     }
-  } else if (e.key == "ArrowRight" || e.key == "d") {
-    if (!field.moveRight()) {
-      spawn();
-    }
-  } else if (e.key == "ArrowUp" || e.key == "w") {
-    if (!field.moveUp()) {
-      spawn();
-    }
-  } else if (e.key == "ArrowDown" || e.key == "s") {
-    if (!field.moveDown()) {
-      spawn();
-    }
-  }
-  if (field.isGameOver()) {
-    alert("Game Over!");
-    field.reset();
-    count.innerText = `Очки: ${field.count}`;
-  } else {
+    saveState();
     count.innerText = `Очки: ${field.count}`;
     field.update();
   }
@@ -73,16 +95,7 @@ let startX,
 let endX,
   endY = 0;
 
-canvas.addEventListener("touchstart", (e) => {
-  e.preventDefault();
-
-  startX = e.changedTouches[0].clientX;
-  startY = e.changedTouches[0].clientY;
-});
-
-function gameMobile(e) {
-  localStorage.setItem("field", JSON.stringify(field.getF()));
-  localStorage.setItem("score", field.count);
+function gameMobile() {
   const deviationX = startX - endX;
   const deviationY = startY - endY;
   let flag = true;
@@ -93,10 +106,7 @@ function gameMobile(e) {
   }
   if (flag) {
     if (deviationX > 0) {
-      const prev = field.getF();
-      field.moveLeft();
-      const now = field.getF();
-      if (!field.cmp(prev, now)) {
+      if (!field.moveLeft()) {
         spawn();
       }
     } else if (deviationX < 0) {
@@ -115,17 +125,18 @@ function gameMobile(e) {
       }
     }
   }
-  if (field.isGameOver()) {
-    alert("Game Over!");
-    field.reset();
-    count.innerText = `Очки: ${field.count}`;
-  } else {
-    count.innerText = `Очки: ${field.count}`;
-    field.update();
-  }
+  saveState();
+  count.innerText = `Очки: ${field.count}`;
+  field.update();
 }
 document.addEventListener("keydown", (e) => {
   game(e);
+});
+canvas.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+
+  startX = e.changedTouches[0].clientX;
+  startY = e.changedTouches[0].clientY;
 });
 
 canvas.addEventListener("touchend", (e) => {
@@ -135,6 +146,5 @@ canvas.addEventListener("touchend", (e) => {
   gameMobile();
 });
 window.addEventListener("beforeunload", () => {
-  localStorage.setItem("field", JSON.stringify(field.getF()));
-  localStorage.setItem("score", field.count);
+  saveState();
 });

@@ -36,26 +36,11 @@ const tileColor = {
   2048: "rgb(238, 194, 46)",
   default: "rgb(61, 58, 51)",
 };
-// fadein for tiles in field
-let alpha = 0;
 
 function fillCell(x, y, color, w = gridCellSize, h = gridCellSize) {
   ctx.fillStyle = color;
   ctx.fillRect(0.5 + x + offset, offset + y, w, h);
 }
-
-function fadeIn(x, y, color, w, h) {
-  ctx.clearRect(x, y, w, h);
-  ctx.globalAlpha = alpha;
-  fillCell(x, y, color, w, h);
-  if (alpha < 1) {
-    alpha += 0.02;
-    requestAnimationFrame(fadeIn);
-  } else {
-    alpha = 1;
-  }
-}
-
 function createCell(num, pos, textColor) {
   const i = pos[0];
   const j = pos[1];
@@ -77,13 +62,13 @@ function createCell(num, pos, textColor) {
     offset + gridCellSize * i + gridCellSize / 2,
   );
 }
+ctx.font = `${textSize} ${font}`;
 
 export class GameField {
   #f;
-  #f2;
   count;
-  constructor(f) {
-    this.#f = f;
+  constructor() {
+    this.#f = matrix.createField();
     this.count = 0;
   }
   #getFreeCells() {
@@ -110,36 +95,28 @@ export class GameField {
     };
 
     for (let i = 0; i < times; ++i) {
-      output = 2;
-      const randIndex = randomInRange(0, 9);
-      if (randIndex == 9) {
+      if (Math.random() < 0.9) {
+        output = 2;
+      } else {
         output = 4;
       }
-
-      let i = 0;
       let freeCells = this.#getFreeCells();
-      let coord = {};
-      let row,
-        col = -1;
-      coord = freeCells[randomInRange(0, freeCells.length - 1)];
-      if (Object.keys(coord).length != 0) {
-        row = coord["row"];
-        col = coord["col"];
-        this.#f[row][col] = output;
+      const coord = freeCells[randomInRange(0, freeCells.length - 1)];
 
-        const currentColor = output > 2 ? tileColor["4"] : tileColor["2"];
-        const textColor = "rgb(117, 100, 82)";
-        fadeIn(
-          gridCellSize * col + 5,
-          gridCellSize * row + 5,
-          currentColor,
-          fillAreaSize,
-          fillAreaSize,
-        );
-        alpha = 0;
-        ctx.font = `${textSize} ${font}`;
-        createCell(this.#f[row][col], [row, col], textColor);
-      }
+      const row = coord["row"];
+      const col = coord["col"];
+      this.#f[row][col] = output;
+
+      const currentColor = output > 2 ? tileColor["4"] : tileColor["2"];
+      const textColor = "rgb(117, 100, 82)";
+      fillCell(
+        gridCellSize * col + 5,
+        gridCellSize * row + 5,
+        currentColor,
+        fillAreaSize,
+        fillAreaSize,
+      );
+      createCell(this.#f[row][col], [row, col], textColor);
     }
   }
   draw() {
@@ -198,7 +175,6 @@ export class GameField {
               fillAreaSize,
             );
           }
-          ctx.font = `${textSize} ${font}`;
           const textColor =
             this.#f[i][j] <= 4 ? "rgb(117, 100, 82)" : "rgb(255, 255, 255)";
           createCell(this.#f[i][j], [i, j], textColor);
@@ -206,8 +182,9 @@ export class GameField {
       }
     }
   }
-  moveLeft(f = true) {
+  moveLeft() {
     let arr = matrix.createField();
+    const prev = this.#f;
     let el_counter = 0;
     for (let i = 0; i < 4; ++i) {
       for (let j = 0; j < 4; ++j) {
@@ -233,72 +210,51 @@ export class GameField {
       }
       el_counter = 0;
     }
-    if (f) {
-      this.#f = res.slice();
-    } else {
-      this.#f2 = res.slice();
-    }
-  }
-  cmp(prev, now) {
-    return matrix.compareTwoMatrix(prev, now);
-  }
 
+    this.#f = res.slice();
+    return matrix.compareTwoMatrix(prev, this.#f);
+  }
   moveRight() {
-    const prev = this.#f;
     this.#f = matrix.rotate_180(this.#f);
-    this.moveLeft();
+    const fl = this.moveLeft();
     this.#f = matrix.rotate_180(this.#f);
-    const now = this.#f;
-    return this.cmp(prev, now);
+    return fl;
   }
 
   moveDown() {
-    const prev = this.#f;
     this.#f = matrix.rotate_90cw(this.#f);
-    this.moveLeft();
+    const fl = this.moveLeft();
     this.#f = matrix.rotate_90ccw(this.#f);
-    const now = this.#f;
-    return this.cmp(prev, now);
+    return fl;
   }
 
   moveUp() {
-    const prev = this.#f;
     this.#f = matrix.rotate_90ccw(this.#f);
-    this.moveLeft();
+    const fl = this.moveLeft();
     this.#f = matrix.rotate_90cw(this.#f);
-    const now = this.#f;
-    return this.cmp(prev, now);
+    return fl;
   }
-  isFull() {
-    for (let i = 0; i < 4; ++i) {
-      for (let j = 0; j < 4; ++j) {
+
+  isGameOver() {
+    for (let i = 0; i < 4; i++) {
+      for (let j = 0; j < 4; j++) {
         if (this.#f[i][j] == 0) {
           return false;
         }
       }
     }
-    return true;
-  }
-  isGameOver() {
-    const isMergeable = () => {
-      this.moveLeft(false);
-      for (let i = 0; i < 4; ++i) {
-        for (let j = 0; j < 4; ++j) {
-          if (
-            (j < 3 && this.#f2[i][j] == this.#f2[i][j + 1]) ||
-            (j > 0 && this.#f2[i][j] == this.#f2[i][j - 1]) ||
-            (i < 3 && this.#f2[i][j] == this.#f2[i + 1][j]) ||
-            (i > 0 && this.#f2[i][j] == this.#f2[i - 1][j])
-          )
-            return false;
+    for (let i = 0; i < 4; i++) {
+      for (let j = 0; j < 4; j++) {
+        if (j < 3 && this.#f[i][j] == this.#f[i][j + 1]) {
+          return false;
+        }
+        if (i < 3 && this.#f[i][j] == this.#f[i + 1][j]) {
+          return false;
         }
       }
-      return true;
-    };
-    if (this.isFull() && isMergeable()) {
-      return true;
     }
-    return false;
+
+    return true;
   }
   print() {
     let res = "";
@@ -313,5 +269,3 @@ export class GameField {
     console.log();
   }
 }
-
-export const mem = matrix.createField();
